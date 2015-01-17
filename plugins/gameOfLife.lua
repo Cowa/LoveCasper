@@ -7,7 +7,7 @@ Plugin.Alive = {255, 255, 255}
 function Plugin:initialize()
   local random = math.random(100)
 
-  if (random < 10) then
+  if (random < 40) then
     return Plugin.Alive
   else
     return Plugin.Dead
@@ -23,21 +23,12 @@ function Plugin:iterate(cell, neighbors)
     end
   end
 
-  -- When the current cell is Dead
-  if cell == Plugin.Dead then
-    if count == 3 then
-      return Plugin.Alive
-    else
-      return Plugin.Dead
-    end
-  else
-    -- When the current cell is Alive
-    if count >= 2 and count <= 3 then
-      return Plugin.Alive
-    else
-      return Plugin.Dead
-    end
-  end
+  if count < 2 then return Plugin.Dead end
+  if count > 1 and count < 4 and cell == Plugin.Alive then return Plugin.Alive end
+  if count > 3 then return Plugin.Dead end
+  if count == 3 then return Plugin.Alive end
+
+  return cell
 end
 
 return Plugin

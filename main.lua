@@ -1,45 +1,40 @@
-GridHandler = require 'grid'
-GameOfLife  = require 'plugins/gameOfLife'
-Plugin      = GameOfLife
-
-Title = 'Love Casper - FPS '
-
-WindowWidth  = 800
-WindowHeight = 600
-
-Grid       = {}
-GridWidth  = 100
-GridHeight = 100
-
-CellWidth  = 0
-CellHeight = 0
-
-AccDt       = 0
-IterateTime = 0.05
+require 'grid'
+GameOfLife = require 'plugins/gameOfLife'
 
 function love.load()
   math.randomseed(os.time())
+
+  Plugin = GameOfLife
+  WindowWidth, WindowHeight = 800, 600
+
+  Grid = {}
+  GridWidth, GridHeight = 50, 50
+
+  CellWidth, CellHeight = 0, 0
+
+  AccDt, IterateTime = 0, 0.05
+
   love.resize(WindowWidth, WindowHeight)
-  Grid = GridHandler:createGrid(GridWidth, GridHeight, Plugin)
+  Grid = createGrid()
 end
 
 function love.update(dt)
-  love.window.setTitle(Title .. love.timer.getFPS())
+  love.window.setTitle('Love Casper - FPS ' .. love.timer.getFPS())
 
   AccDt = AccDt + dt
 
   if (AccDt > IterateTime) then
     AccDt = 0
-    local copyGrid = Grid
+    local copiedGrid = createGrid()
 
     for x = 1, GridHeight do
       for y = 1, GridWidth do
-        local neighbors = GridHandler:getNeighbors(Grid, x, y, GridWidth, GridHeight)
+        local neighbors = getNeighbors(x, y)
 
-        copyGrid[x][y] = Plugin:iterate(Grid[x][y], neighbors)
+        copiedGrid[x][y] = Plugin:iterate(Grid[x][y], neighbors)
       end
     end
-    Grid = copyGrid
+    Grid = copiedGrid
   end
 end
 
@@ -55,4 +50,8 @@ end
 function love.resize(w, h)
   CellWidth  = w / GridWidth
   CellHeight = h / GridHeight
+end
+
+function love.keypressed(key)
+  if key == "escape" then love.event.quit() end
 end
