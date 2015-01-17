@@ -1,5 +1,7 @@
+Gui        = require 'vendors.frames'
+GameOfLife = require 'plugins.gameOfLife'
 require 'grid'
-GameOfLife = require 'plugins/gameOfLife'
+require 'gui'
 
 function love.load()
   math.randomseed(os.time())
@@ -13,6 +15,9 @@ function love.load()
   CellWidth, CellHeight = 0, 0
 
   AccDt, IterateTime = 0, 0.05
+  Paused = true
+
+  setUpGui()
 
   love.resize(WindowWidth, WindowHeight)
   Grid = createGrid()
@@ -23,7 +28,7 @@ function love.update(dt)
 
   AccDt = AccDt + dt
 
-  if (AccDt > IterateTime) then
+  if (AccDt > IterateTime and not Paused) then
     AccDt = 0
     local nextGrid = createGrid()
 
@@ -36,24 +41,35 @@ function love.update(dt)
     end
     Grid = nextGrid
   end
+
+  Gui.update(dt)
 end
 
 function love.draw()
-  love.graphics.setColor(50, 50, 255)
-  love.graphics.rectangle('fill', 0, 0, WindowWidth, WindowHeight)
   for x = 1, GridLines do
     for y = 1, GridColumns do
       love.graphics.setColor(Grid[x][y])
       love.graphics.rectangle('fill', (y - 1) * CellWidth, (x - 1) * CellHeight, CellWidth, CellHeight)
     end
   end
+  Gui.draw()
 end
 
 function love.resize(w, h)
   WindowWidth, WindowHeight = w, h
   CellWidth, CellHeight     = (w / GridColumns), (h / GridLines)
+  resizeGui()
 end
 
 function love.keypressed(key)
-  if key == "escape" then love.event.quit() end
+  if key == 'escape' then love.event.quit()
+  elseif key == ' ' then Paused = not Paused
+  elseif key == 'h' then
+    VisiblePanel = not VisiblePanel
+    Panel:SetVisible(VisiblePanel) end
+  Gui.keypressed(key, unicode)
 end
+
+function love.keyreleased(key) Gui.keyreleased(key) end
+function love.mousepressed(x, y, button) Gui.mousepressed(x, y, button) end
+function love.mousereleased(x, y, button) Gui.mousereleased(x, y, button) end
