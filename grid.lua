@@ -1,10 +1,10 @@
 function createGrid()
-  local grid, w, h = {}, GridWidth, GridHeight
+  local grid = {}
 
-  for i = 1, h do
-    grid[i] = {}
-    for j = 1, w do
-      grid[i][j] = Plugin:initialize()
+  for x = 1, GridLines do
+    grid[x] = {}
+    for y = 1, GridColumns do
+      grid[x][y] = Plugin:initialize()
     end
   end
 
@@ -12,7 +12,7 @@ function createGrid()
 end
 
 function getNeighbors(x, y)
-  local neighbors, w, h = {}, GridWidth, GridHeight
+  local neighbors = {}
 
   if Grid[x - 1] ~= nil then table.insert(neighbors, Grid[x - 1][y]) end
   if Grid[x + 1] ~= nil then table.insert(neighbors, Grid[x + 1][y]) end

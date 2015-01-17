@@ -8,7 +8,7 @@ function love.load()
   WindowWidth, WindowHeight = 800, 600
 
   Grid = {}
-  GridWidth, GridHeight = 50, 50
+  GridLines, GridColumns = 50, 60
 
   CellWidth, CellHeight = 0, 0
 
@@ -25,31 +25,33 @@ function love.update(dt)
 
   if (AccDt > IterateTime) then
     AccDt = 0
-    local copiedGrid = createGrid()
+    local nextGrid = createGrid()
 
-    for x = 1, GridHeight do
-      for y = 1, GridWidth do
+    for x = 1, GridLines do
+      for y = 1, GridColumns do
         local neighbors = getNeighbors(x, y)
 
-        copiedGrid[x][y] = Plugin:iterate(Grid[x][y], neighbors)
+        nextGrid[x][y] = Plugin:iterate(Grid[x][y], neighbors)
       end
     end
-    Grid = copiedGrid
+    Grid = nextGrid
   end
 end
 
 function love.draw()
-  for x = 1, GridHeight do
-    for y = 1, GridWidth do
+  love.graphics.setColor(50, 50, 255)
+  love.graphics.rectangle('fill', 0, 0, WindowWidth, WindowHeight)
+  for x = 1, GridLines do
+    for y = 1, GridColumns do
       love.graphics.setColor(Grid[x][y])
-      love.graphics.rectangle('fill', (x - 1) * CellWidth, (y - 1) * CellHeight, CellWidth, CellHeight)
+      love.graphics.rectangle('fill', (y - 1) * CellWidth, (x - 1) * CellHeight, CellWidth, CellHeight)
     end
   end
 end
 
 function love.resize(w, h)
-  CellWidth  = w / GridWidth
-  CellHeight = h / GridHeight
+  WindowWidth, WindowHeight = w, h
+  CellWidth, CellHeight     = (w / GridColumns), (h / GridLines)
 end
 
 function love.keypressed(key)
