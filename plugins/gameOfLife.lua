@@ -1,8 +1,8 @@
 Plugin = {}
 
 -- Cells definition
-Plugin.Dead  = {0, 0, 0}
-Plugin.Alive = {255, 255, 255}
+Plugin.Dead  = {35, 35, 35}
+Plugin.Alive = {94, 170, 99}
 
 function Plugin:initialize()
   local random = math.random(100)

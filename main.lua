@@ -1,6 +1,5 @@
 Gui        = require 'vendors.frames'
 GameOfLife = require 'plugins.gameOfLife'
-require 'grid'
 require 'gui'
 
 function love.load()
@@ -10,7 +9,7 @@ function love.load()
   WindowWidth, WindowHeight = 800, 600
 
   Grid = {}
-  GridLines, GridColumns = 50, 60
+  GridLines, GridColumns = 100, 90
 
   CellWidth, CellHeight = 0, 0
 
@@ -59,6 +58,34 @@ function love.resize(w, h)
   WindowWidth, WindowHeight = w, h
   CellWidth, CellHeight     = (w / GridColumns), (h / GridLines)
   resizeGui()
+end
+
+function createGrid()
+  local grid = {}
+
+  for x = 1, GridLines do
+    grid[x] = {}
+    for y = 1, GridColumns do
+      grid[x][y] = Plugin:initialize()
+    end
+  end
+
+  return grid
+end
+
+function getNeighbors(x, y)
+  local neighbors = {}
+
+  if Grid[x - 1] ~= nil then table.insert(neighbors, Grid[x - 1][y]) end
+  if Grid[x + 1] ~= nil then table.insert(neighbors, Grid[x + 1][y]) end
+  if Grid[x][y - 1] ~= nil then table.insert(neighbors, Grid[x][y - 1]) end
+  if Grid[x][y + 1] ~= nil then table.insert(neighbors, Grid[x][y + 1]) end
+  if Grid[x + 1] ~= nil and Grid[x + 1][y + 1] ~= nil  then table.insert(neighbors, Grid[x + 1][y + 1]) end
+  if Grid[x - 1] ~= nil and Grid[x - 1][y - 1] ~= nil  then table.insert(neighbors, Grid[x - 1][y - 1]) end
+  if Grid[x + 1] ~= nil and Grid[x + 1][y - 1] ~= nil  then table.insert(neighbors, Grid[x + 1][y - 1]) end
+  if Grid[x - 1] ~= nil and Grid[x - 1][y + 1] ~= nil  then table.insert(neighbors, Grid[x - 1][y + 1]) end
+
+  return neighbors
 end
 
 function love.keypressed(key)
