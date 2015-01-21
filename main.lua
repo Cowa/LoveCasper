@@ -80,10 +80,10 @@ function getNeighbors(x, y)
   if Grid[x + 1] ~= nil then table.insert(neighbors, Grid[x + 1][y]) end
   if Grid[x][y - 1] ~= nil then table.insert(neighbors, Grid[x][y - 1]) end
   if Grid[x][y + 1] ~= nil then table.insert(neighbors, Grid[x][y + 1]) end
-  if Grid[x + 1] ~= nil and Grid[x + 1][y + 1] ~= nil  then table.insert(neighbors, Grid[x + 1][y + 1]) end
-  if Grid[x - 1] ~= nil and Grid[x - 1][y - 1] ~= nil  then table.insert(neighbors, Grid[x - 1][y - 1]) end
-  if Grid[x + 1] ~= nil and Grid[x + 1][y - 1] ~= nil  then table.insert(neighbors, Grid[x + 1][y - 1]) end
-  if Grid[x - 1] ~= nil and Grid[x - 1][y + 1] ~= nil  then table.insert(neighbors, Grid[x - 1][y + 1]) end
+  if Grid[x + 1] ~= nil and Grid[x + 1][y + 1] ~= nil then table.insert(neighbors, Grid[x + 1][y + 1]) end
+  if Grid[x - 1] ~= nil and Grid[x - 1][y - 1] ~= nil then table.insert(neighbors, Grid[x - 1][y - 1]) end
+  if Grid[x + 1] ~= nil and Grid[x + 1][y - 1] ~= nil then table.insert(neighbors, Grid[x + 1][y - 1]) end
+  if Grid[x - 1] ~= nil and Grid[x - 1][y + 1] ~= nil then table.insert(neighbors, Grid[x - 1][y + 1]) end
 
   return neighbors
 end
