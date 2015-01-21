@@ -1,11 +1,12 @@
 Gui        = require 'vendors.frames'
 GameOfLife = require 'plugins.gameOfLife'
+TerrainGen = require 'plugins.terrainGeneration'
 require 'gui'
 
 function love.load()
   math.randomseed(os.time())
 
-  Plugin = GameOfLife
+  Plugin = TerrainGen
   WindowWidth, WindowHeight = 800, 600
 
   Grid = {}
@@ -76,14 +77,15 @@ end
 function getNeighbors(x, y)
   local neighbors = {}
 
-  if Grid[x - 1] ~= nil then table.insert(neighbors, Grid[x - 1][y]) end
-  if Grid[x + 1] ~= nil then table.insert(neighbors, Grid[x + 1][y]) end
-  if Grid[x][y - 1] ~= nil then table.insert(neighbors, Grid[x][y - 1]) end
-  if Grid[x][y + 1] ~= nil then table.insert(neighbors, Grid[x][y + 1]) end
-  if Grid[x + 1] ~= nil and Grid[x + 1][y + 1] ~= nil then table.insert(neighbors, Grid[x + 1][y + 1]) end
-  if Grid[x - 1] ~= nil and Grid[x - 1][y - 1] ~= nil then table.insert(neighbors, Grid[x - 1][y - 1]) end
-  if Grid[x + 1] ~= nil and Grid[x + 1][y - 1] ~= nil then table.insert(neighbors, Grid[x + 1][y - 1]) end
-  if Grid[x - 1] ~= nil and Grid[x - 1][y + 1] ~= nil then table.insert(neighbors, Grid[x - 1][y + 1]) end
+  -- N: North, E: East, W: West, S: South, etc.
+  if Grid[x - 1] ~= nil then table.insert(neighbors, {'N', Grid[x - 1][y]}) end
+  if Grid[x + 1] ~= nil then table.insert(neighbors, {'S', Grid[x + 1][y]}) end
+  if Grid[x][y - 1] ~= nil then table.insert(neighbors, {'W', Grid[x][y - 1]}) end
+  if Grid[x][y + 1] ~= nil then table.insert(neighbors, {'E', Grid[x][y + 1]}) end
+  if Grid[x + 1] ~= nil and Grid[x + 1][y + 1] ~= nil then table.insert(neighbors, {'SW', Grid[x + 1][y + 1]}) end
+  if Grid[x - 1] ~= nil and Grid[x - 1][y - 1] ~= nil then table.insert(neighbors, {'NE', Grid[x - 1][y - 1]}) end
+  if Grid[x + 1] ~= nil and Grid[x + 1][y - 1] ~= nil then table.insert(neighbors, {'NW', Grid[x + 1][y - 1]}) end
+  if Grid[x - 1] ~= nil and Grid[x - 1][y + 1] ~= nil then table.insert(neighbors, {'SE', Grid[x - 1][y + 1]}) end
 
   return neighbors
 end
@@ -93,7 +95,10 @@ function love.keypressed(key)
   elseif key == ' ' then Paused = not Paused
   elseif key == 'h' then
     VisiblePanel = not VisiblePanel
-    Panel:SetVisible(VisiblePanel) end
+    Panel:SetVisible(VisiblePanel)
+  elseif key == 'r' then
+    Grid = createGrid()
+  end
   Gui.keypressed(key, unicode)
 end
 

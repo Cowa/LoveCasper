@@ -18,7 +18,10 @@ function Plugin:iterate(cell, neighbors)
   local count = 0
 
   for i = 1, #neighbors do
-    if neighbors[i] == Plugin.Alive then
+    local current        = neighbors[i]
+    local position, type = current[1], current[2]
+
+    if type == Plugin.Alive then
       count = count + 1
     end
   end
