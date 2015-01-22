@@ -1,4 +1,4 @@
-VisiblePanel   = true
+VisiblePanel = false
 
 Panel = Gui.Create('panel')
 
@@ -8,6 +8,8 @@ local nbLineGrid   = Gui.Create("numberbox", Panel)
 local nbColumnGrid = Gui.Create("numberbox", Panel)
 
 function setUpGui()
+  Panel:SetVisible(false)
+
   play.OnClick = function()
     Paused = not Paused
   end

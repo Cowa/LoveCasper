@@ -14,7 +14,7 @@ function love.load()
 
   CellWidth, CellHeight = 0, 0
 
-  AccDt, IterateTime = 0, 0.05
+  AccDt, IterateTime = 0, 0.10
   Paused = true
 
   setUpGui()
@@ -55,12 +55,6 @@ function love.draw()
   Gui.draw()
 end
 
-function love.resize(w, h)
-  WindowWidth, WindowHeight = w, h
-  CellWidth, CellHeight     = (w / GridColumns), (h / GridLines)
-  resizeGui()
-end
-
 function createGrid()
   local grid = {}
 
@@ -90,6 +84,16 @@ function getNeighbors(x, y)
   return neighbors
 end
 
+function whichGridCase(x, y)
+  return math.ceil(x / CellWidth), math.ceil(y / CellHeight)
+end
+
+function love.resize(w, h)
+  WindowWidth, WindowHeight = w, h
+  CellWidth, CellHeight     = (w / GridColumns), (h / GridLines)
+  resizeGui()
+end
+
 function love.keypressed(key)
   if key == 'escape' then love.event.quit()
   elseif key == ' ' then Paused = not Paused
@@ -103,5 +107,12 @@ function love.keypressed(key)
 end
 
 function love.keyreleased(key) Gui.keyreleased(key) end
-function love.mousepressed(x, y, button) Gui.mousepressed(x, y, button) end
+
+function love.mousepressed(x, y, button)
+  local col, row = whichGridCase(x, y)
+  Grid[row][col] = Plugin.Water
+
+  Gui.mousepressed(x, y, button)
+end
+
 function love.mousereleased(x, y, button) Gui.mousereleased(x, y, button) end
