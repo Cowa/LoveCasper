@@ -110,7 +110,16 @@ function love.keyreleased(key) Gui.keyreleased(key) end
 
 function love.mousepressed(x, y, button)
   local col, row = whichGridCase(x, y)
-  Grid[row][col] = Plugin.Water
+
+  if col == 0 or row == 0 then
+    return
+  end
+
+  if Plugin == TerrainGen then
+    Grid[row][col] = Plugin.Water
+  else
+    Grid[row][col] = Plugin.Alive
+  end
 
   Gui.mousepressed(x, y, button)
 end
